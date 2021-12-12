@@ -10,5 +10,5 @@
 /coverage
 /npmDist
 /denoDist
-/npm
+# /npm
 /deno
