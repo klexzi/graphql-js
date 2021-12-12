@@ -8,7 +8,7 @@
 /.eslintcache
 /node_modules
 /coverage
-# /npmDist
+/npmDist
 /denoDist
-# /npm
+/npm
 /deno
