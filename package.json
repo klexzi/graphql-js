@@ -1,9 +1,8 @@
 {
-  "name": "graphql",
+  "name": "graphql-brkchg-15",
   "version": "15.8.0",
   "description": "A Query Language and Runtime which can target any service.",
   "license": "MIT",
-  "private": true,
   "main": "index",
   "module": "index.mjs",
   "types": "index.d.ts",
@@ -44,7 +43,8 @@
     "build:npm": "node resources/build-npm.js",
     "build:deno": "node resources/build-deno.js",
     "gitpublish:npm": "bash ./resources/gitpublish.sh npm npmDist",
-    "gitpublish:deno": "bash ./resources/gitpublish.sh deno denoDist"
+    "gitpublish:deno": "bash ./resources/gitpublish.sh deno denoDist",
+    "prepare": "npm run build:npm"
   },
   "devDependencies": {
     "@babel/core": "7.12.10",

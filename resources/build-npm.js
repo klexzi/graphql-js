@@ -9,13 +9,13 @@ const babel = require('@babel/core');
 const { readdirRecursive, showDirStats } = require('./utils');
 
 if (require.main === module) {
-  fs.rmSync('./npmDist', { recursive: true, force: true });
-  fs.mkdirSync('./npmDist');
+  fs.rmSync('./dist', { recursive: true, force: true });
+  fs.mkdirSync('./dist');
 
   const srcFiles = readdirRecursive('./src', { ignoreDir: /^__.*__$/ });
   for (const filepath of srcFiles) {
     const srcPath = path.join('./src', filepath);
-    const destPath = path.join('./npmDist', filepath);
+    const destPath = path.join('./dist', filepath);
 
     fs.mkdirSync(path.dirname(destPath), { recursive: true });
     if (filepath.endsWith('.js')) {
@@ -32,17 +32,14 @@ if (require.main === module) {
     }
   }
 
-  fs.copyFileSync('./LICENSE', './npmDist/LICENSE');
-  fs.copyFileSync('./README.md', './npmDist/README.md');
+  fs.copyFileSync('./LICENSE', './dist/LICENSE');
+  fs.copyFileSync('./README.md', './dist/README.md');
 
   // Should be done as the last step so only valid packages can be published
   const packageJSON = buildPackageJSON();
-  fs.writeFileSync(
-    './npmDist/package.json',
-    JSON.stringify(packageJSON, null, 2),
-  );
+  fs.writeFileSync('./dist/package.json', JSON.stringify(packageJSON, null, 2));
 
-  showDirStats('./npmDist');
+  showDirStats('./dist');
 }
 
 function babelBuild(srcPath, options) {
