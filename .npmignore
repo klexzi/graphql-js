@@ -1,0 +1,12 @@
+integrationTests
+docs
+flow-typed
+benchmark
+.github
+.prettierrc
+.nycrc.yml
+.prettierignore
+codecov.yml
+cspell.json
+.eslintignore
+.eslint.yml

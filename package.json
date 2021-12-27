@@ -25,7 +25,6 @@
   "engines_on_npm": {
     "node": ">= 10.x"
   },
-  "files": ["npmDist/*", "src/*", "resources/*"],
   "scripts": {
     "preversion": ". ./resources/checkgit.sh && npm ci",
     "version": "node resources/gen-version.js && npm test && git add src/version.js",
