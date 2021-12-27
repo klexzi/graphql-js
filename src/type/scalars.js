@@ -27,16 +27,17 @@ const warn = (error: string, msg: string) => {
   // eslint-disable-next-line no-console
   console.warn(`${error}: ${msg}`);
 
-  if (process.env.NODE_ENV === 'development') {
-    setTimeout(() => {
-      // eslint-disable-next-line no-console
-      console.warn(`
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.NODE_ENV === 'dev'
+  ) {
+    // eslint-disable-next-line no-console
+    console.warn(`
 ${yellow}${error}${white}:
   ${msg}
   ⬆️  Find inline error message in preceding logs for more context.
   Please fix in a ${green}backwardly compatible${white} way; deprecate the incompatible field and provide a compatible replacement field.
 `);
-    }, 30000);
   }
 };
 
