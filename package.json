@@ -25,6 +25,7 @@
   "engines_on_npm": {
     "node": ">= 10.x"
   },
+  "files": ["npmDist/*", "src/*"],
   "scripts": {
     "preversion": ". ./resources/checkgit.sh && npm ci",
     "version": "node resources/gen-version.js && npm test && git add src/version.js",
@@ -44,7 +45,7 @@
     "build:deno": "node resources/build-deno.js",
     "gitpublish:npm": "bash ./resources/gitpublish.sh npm npmDist",
     "gitpublish:deno": "bash ./resources/gitpublish.sh deno denoDist",
-    "prepare": "npm run build:npm && cp -r ./dist/* . && rm -rf ./dist"
+    "prepare": "npm run build:npm && cp -r ./npmDist/* . && rm -rf ./npmDist ./src"
   },
   "devDependencies": {
     "@babel/core": "7.12.10",
