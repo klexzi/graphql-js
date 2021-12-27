@@ -36,7 +36,7 @@ const warn = (error: string, msg: string) => {
 ${yellow}${error}${white}:
   ${msg}
   ⬆️  Find inline error message in preceding logs for more context.
-  Please fix in a ${green}backwardly compatible${white} way; deprecate the incompatible field and provide a compatible replacement field.
+  Please fix in a ${green}backwardly compatible${white} way; either have it  pass in the right data type for the field or deprecate the incompatible field and provide a compatible replacement field.
 `);
   }
 };
