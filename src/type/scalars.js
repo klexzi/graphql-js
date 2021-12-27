@@ -20,6 +20,31 @@ import { GraphQLScalarType } from './definition';
 const MAX_INT = 2147483647;
 const MIN_INT = -2147483648;
 
+const green = '\x1B[32m';
+const yellow = '\x1B[33m';
+const white = '\x1B[37m';
+const warn = (error: string, msg: string) => {
+  // eslint-disable-next-line no-console
+  console.warn(`${error}: ${msg}`);
+
+  if (process.env.NODE_ENV === 'development') {
+    setTimeout(() => {
+      // eslint-disable-next-line no-console
+      console.warn(`
+${yellow}${error}${white}:
+  ${msg}
+  ⬆️  Find inline error message in preceding logs for more context.
+  Please fix in a ${green}backwardly compatible${white} way; deprecate the incompatible field and provide a compatible replacement field.
+`);
+    }, 30000);
+  }
+};
+
+const warnInputCoercion = (msg: string) =>
+  warn('Type coercion of client input variables is deprecated', msg);
+const warnResultCoercion = (msg: string) =>
+  warn('Type coercion of server serialized output has become more strict', msg);
+
 function serializeInt(outputValue: mixed): number {
   const coercedValue = serializeObject(outputValue);
 
@@ -47,17 +72,19 @@ function serializeInt(outputValue: mixed): number {
 }
 
 function coerceInt(inputValue: mixed): number {
+  let val = inputValue;
   if (!isInteger(inputValue)) {
-    throw new GraphQLError(
+    warnInputCoercion(
       `Int cannot represent non-integer value: ${inspect(inputValue)}`,
     );
+    val = serializeInt(inputValue);
   }
-  if (inputValue > MAX_INT || inputValue < MIN_INT) {
+  if (val > MAX_INT || val < MIN_INT) {
     throw new GraphQLError(
-      `Int cannot represent non 32-bit signed integer value: ${inputValue}`,
+      `Int cannot represent non 32-bit signed integer value: ${val}`,
     );
   }
-  return inputValue;
+  return val;
 }
 
 export const GraphQLInt = new GraphQLScalarType({
@@ -106,9 +133,10 @@ function serializeFloat(outputValue: mixed): number {
 
 function coerceFloat(inputValue: mixed): number {
   if (!isFinite(inputValue)) {
-    throw new GraphQLError(
+    warnInputCoercion(
       `Float cannot represent non numeric value: ${inspect(inputValue)}`,
     );
+    return serializeFloat(inputValue);
   }
   return inputValue;
 }
@@ -170,9 +198,10 @@ function serializeString(outputValue: mixed): string {
 
 function coerceString(inputValue: mixed): string {
   if (typeof inputValue !== 'string') {
-    throw new GraphQLError(
+    warnInputCoercion(
       `String cannot represent a non string value: ${inspect(inputValue)}`,
     );
+    return serializeString(inputValue);
   }
   return inputValue;
 }
@@ -210,9 +239,10 @@ function serializeBoolean(outputValue: mixed): boolean {
 
 function coerceBoolean(inputValue: mixed): boolean {
   if (typeof inputValue !== 'boolean') {
-    throw new GraphQLError(
+    warnInputCoercion(
       `Boolean cannot represent a non boolean value: ${inspect(inputValue)}`,
     );
+    return serializeBoolean(inputValue);
   }
   return inputValue;
 }
@@ -242,7 +272,8 @@ function serializeID(outputValue: mixed): string {
   if (isInteger(coercedValue)) {
     return String(coercedValue);
   }
-  throw new GraphQLError(`ID cannot represent value: ${inspect(outputValue)}`);
+  warnResultCoercion(`ID cannot represent value: ${inspect(outputValue)}`);
+  return String(outputValue);
 }
 
 function coerceID(inputValue: mixed): string {
@@ -252,7 +283,8 @@ function coerceID(inputValue: mixed): string {
   if (isInteger(inputValue)) {
     return inputValue.toString();
   }
-  throw new GraphQLError(`ID cannot represent value: ${inspect(inputValue)}`);
+  warnInputCoercion(`ID cannot represent value: ${inspect(inputValue)}`);
+  return serializeString(inputValue);
 }
 
 export const GraphQLID = new GraphQLScalarType({
