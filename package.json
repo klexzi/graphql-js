@@ -45,7 +45,7 @@
     "build:deno": "node resources/build-deno.js",
     "gitpublish:npm": "bash ./resources/gitpublish.sh npm npmDist",
     "gitpublish:deno": "bash ./resources/gitpublish.sh deno denoDist",
-    "prepare": "npm run build:npm"
+    "prepare": "npm run build:npm && cp -r ./dist/* . && rm -rf ./dist"
   },
   "devDependencies": {
     "@babel/core": "7.12.10",
